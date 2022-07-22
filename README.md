@@ -15,7 +15,10 @@ $ pip install .
 
 # Run unit tests
 
-To run unittests in from the tests directory you can either install the package, install it in a venv, or to run them as modules without installing:
+First, you need to copy tests/example.setting.json to tests/settings.json
+and add your hostname and token for wikijs
+
+To run unittests from the tests directory you can either install the package, install it in a venv, or to run them as modules without installing:
 
 ```
 $ python -m tests.pages_list
