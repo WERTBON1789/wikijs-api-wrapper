@@ -1,0 +1,5 @@
+import wikijspy
+
+wikijspy.Configuration()
+
+
