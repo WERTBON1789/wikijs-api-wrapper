@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = 'setuptools.build_meta'
+
+[project]
+name = "wikijspy"
+version = "0.0.1"
+authors = [
+    { name="WERTBON1789", email="jan210404@gmx.de" },
+]
+description = "A simple wikijs API wrapper"
+readme = "README.md"
+license = { file="LICENSE" }
+
+[project.urls]
+"Homepage" = "https://github.com/WERTBON1789/wikjs-api-wrapper"
