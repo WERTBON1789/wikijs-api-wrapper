@@ -4,7 +4,7 @@ build-backend = 'setuptools.build_meta'
 
 [project]
 name = "wikijspy"
-version = "0.0.1"
+version = "0.0.2"
 authors = [
     { name="WERTBON1789", email="jan210404@gmx.de" },
 ]

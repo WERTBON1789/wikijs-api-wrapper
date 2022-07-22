@@ -1,0 +1,1 @@
+from wikijspy import test
