@@ -1,9 +1,6 @@
 
-
-
-
 class Configuration:
-    def __init__(self, hostname, api_token):
+    def __init__(self, hostname: str, api_token: str):
         self.hostname = hostname
         self.token = api_token
     
