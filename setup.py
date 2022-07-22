@@ -1,5 +1,10 @@
 from setuptools import setup, find_packages
 
+from os.path import dirname
+
+with open(f"{dirname(__file__)}/requirements.txt", "r") as f:
+    install_requires = f.read().splitlines()
+
 setup(
     name='wikijspy',
     version='0.0.1',
@@ -8,4 +13,5 @@ setup(
     packages=find_packages(),
     license='LICENSE',
     description='A simple wikijs API wrapper',
+    install_requires=install_requires
 )
