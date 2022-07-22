@@ -1,6 +1,6 @@
 from typing import List
 from wikijspy.api_client import ApiClient
-from wikijspy.types.page_types import PageOrderBy, PageOrderByDirection
+from wikijspy.types.page_types import PageOrderBy, PageOrderByDirection, PageListItemOutput
 import json
 
 class PagesApi:
@@ -8,15 +8,21 @@ class PagesApi:
         self.api_client = api_client
 
     def list(self,
+             output: PageListItemOutput,
              authorId: int = None,
              creatorId: int = None,
              limit: int = None,
              locale: str = None,
              orderBy: PageOrderBy = None,
              orderByDirection: PageOrderByDirection = None,
-             tags: List[str] = None,
-             
+             tags: List[str] = None
              ):
+        
+        output_str: str = ""
+        
+        for item in output:
+            output_str += item+","
+        
         query = """
         query($authorId: Int, $creatorId: Int, $limit: Int, $locale: String, $orderBy: PageOrderBy, $orderByDirection: PageOrderByDirection, $tags: [String!]){
                 pages {
@@ -29,11 +35,12 @@ class PagesApi:
                         orderByDirection: $orderByDirection,
                         tags: $tags
                     ){
-                        title
+                        OUTPUT
                     }
                 }
         }
-        """
+        """.replace('OUTPUT', output_str)
+        
         return self.api_client.send_request(query, json.dumps({
                 "authorId": authorId,
                 "creatorId": creatorId,
@@ -43,4 +50,3 @@ class PagesApi:
                 "orderByDirection": orderByDirection,
                 "tags": tags
         }))
-

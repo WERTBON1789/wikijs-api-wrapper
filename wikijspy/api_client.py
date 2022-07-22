@@ -28,4 +28,3 @@ class ApiClient:
             return self.client.execute(gql(graphql_query))
         else:
             return self.client.execute(gql(graphql_query), json.loads(graphql_variables))
-    
