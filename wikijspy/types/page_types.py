@@ -1,5 +1,7 @@
 from enum import Enum
-from typing import List
+from typing import Any, Dict, List, Tuple
+from wikijspy.types.error import InvalidOutputError
+from wikijspy.types.general import ResponseStatusOutput
 
 class PageOrderBy(Enum):
     CREATED = 0
@@ -13,7 +15,7 @@ class PageOrderByDirection(Enum):
     DESC = 1
 
 class PageListItemOutput:
-    __validation_list = [
+    _validation_list = [
         "id",
         "path",
         "locale",
@@ -30,7 +32,7 @@ class PageListItemOutput:
     
     def __init__(self, output: List[str]):
         for item in output:
-            if not item in self.__validation_list:
+            if not item in self._validation_list:
                 raise InvalidOutputError(item, self.__class__.__name__)
         self.output = output
     
@@ -47,7 +49,95 @@ class PageListItemOutput:
         else:
             raise StopIteration
 
-class InvalidOutputError(Exception):
-    def __init__(self, output: str, caller: str):
+class PageOutput:
+    _validation_list = [
+        "id",
+        "path",
+        "hash",
+        "title",
+        "description",
+        "isPrivate",
+        "isPublished",
+        "privateNS",
+        "publishStartDate",
+        "publishEndDate",
+        "tags",
+        "content",
+        "render",
+        "toc",
+        "contentType",
+        "createdAt",
+        "updatedAt",
+        "editor",
+        "locale",
+        "scriptCss",
+        "scriptJs",
+        "authorId",
+        "authorName",
+        "authorEmail",
+        "creatorId",
+        "creatorName",
+        "creatorEmail"
+    ]
+    
+    def __init__(self, output: List[str]):
+        for item in output:
+            if not item in self._validation_list:
+                raise InvalidOutputError(item, self.__class__.__name__)
         self.output = output
-        super().__init__(f"The given output parameter \"{output}\" is invalid for {caller}!")
+    
+    def __iter__(self):
+        self.i = 0
+        self.max = len(self.output)-1
+        return self
+    
+    def __next__(self):
+        if self.i <= self.max:
+            result = self.i
+            self.i += 1
+            return self.output[result]
+        else:
+            raise StopIteration
+
+class PageResponseOutput:
+    _validation_list = {
+        "responseResult": ResponseStatusOutput._validation_list,
+        "page": PageOutput._validation_list
+    }
+    
+    def __init__(self, output: Dict[str, List[str]]):
+        if not output.get("page") and not output.get("responseResult"):
+            raise Exception(f"{self.__class__.__name__} does need to have at least one output!")
+        
+        for item in output:
+            if not isinstance(output[item], list):
+                raise Exception(f"Value of dict[\"{item}\"] must be of list type!")
+            
+            if not item in self._validation_list:
+                raise InvalidOutputError(val, self.__class__.__name__)
+            
+            for val in output[item]:
+                if not val in ResponseStatusOutput._validation_list and not val in PageOutput._validation_list:
+                    raise InvalidOutputError(val, self.__class__.__name__)
+        
+        self.output = output
+    
+    def __iter__(self):
+        self.iter_dict = []
+        
+        for element in self.output:
+            for item in self.output[element]:
+                self.iter_dict.append((element, item))
+        
+        self.i = 0
+        self.max = len(self.iter_dict)-1
+        
+        return self
+    
+    def __next__(self) -> Tuple[str, str]:
+        if self.i <= self.max:
+            result = self.iter_dict[self.i]
+            self.i += 1
+            return result
+        else:
+            raise StopIteration
