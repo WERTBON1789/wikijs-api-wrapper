@@ -249,3 +249,22 @@ class PagesApi:
             "id": id
         }))
     
+    def render(self,
+        output: DefaultResponseOutput,
+        id: int
+    ):
+        query = """
+        mutation($id: Int!){
+            pages{
+                render(
+                    id: $id
+                ){
+                    OUTPUT
+                }
+            }
+        }
+        """.replace('OUTPUT', _generate_output_str(output))
+        
+        return self.api_client.send_request(query, json.dumps({
+            "id": id
+        }))
