@@ -101,6 +101,9 @@ class PageOutput:
             return self.output[result]
         else:
             raise StopIteration
+    
+    def __getitem__(self, item: int):
+        return self.output[item]
 
 class PageResponseOutput:
     _validation_list = {

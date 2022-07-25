@@ -1,6 +1,6 @@
 from typing import Dict, List, Tuple
 from wikijspy.api_client import ApiClient
-from wikijspy.types.page_types import PageOrderBy, PageOrderByDirection, PageListItemOutput, PageResponseOutput
+from wikijspy.types.page_types import PageOrderBy, PageOrderByDirection, PageListItemOutput, PageOutput, PageResponseOutput
 import re
 import json
 
@@ -71,6 +71,26 @@ class PagesApi:
                 "orderBy": orderBy,
                 "orderByDirection": orderByDirection,
                 "tags": tags
+        }))
+    
+    def single(self,
+        output: PageOutput,
+        id: int
+    ):
+        query = """
+        query($id: Int!){
+            pages{
+                single(
+                    id: $id
+                ){
+                    OUTPUT
+                }
+            }
+        }
+        """.replace('OUTPUT', _generate_output_str(output))
+        
+        return self.api_client.send_request(query, json.dumps({
+            "id": id
         }))
     
     def create(self,
