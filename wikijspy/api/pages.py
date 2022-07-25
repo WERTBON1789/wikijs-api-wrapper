@@ -1,7 +1,7 @@
 from typing import Dict, List, Tuple
 from wikijspy.api_client import ApiClient
 from wikijspy.types.page_types import PageOrderBy, PageOrderByDirection, PageListItemOutput, PageOutput, PageResponseOutput
-from wikijspy.types.general import ResponseStatusOutput
+from wikijspy.types.general import DefaultResponseOutput, ResponseStatusOutput
 import re
 import json
 
@@ -230,7 +230,7 @@ class PagesApi:
         return self.api_client.send_request(query, json.dumps(query_variables))
     
     def delete(self,
-        output: ResponseStatusOutput,
+        output: DefaultResponseOutput,
         id: int
     ):
         query = """
@@ -248,3 +248,4 @@ class PagesApi:
         return self.api_client.send_request(query, json.dumps({
             "id": id
         }))
+    
