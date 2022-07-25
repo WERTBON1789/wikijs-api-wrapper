@@ -3,7 +3,7 @@ A basic API wrapper for wikijs written in Python
 
 
 
-Pypi versions aren't available yet.
+PYPI versions aren't available yet.
 
 
 # Installation from repo
@@ -13,13 +13,13 @@ $ cd wikijs-api-wrapper
 $ pip install .
 ```
 
-# Run unit tests
+# Run examples
 
-First, you need to copy tests/example.setting.json to tests/settings.json
+First, you need to copy examples/example.setting.json to examples/settings.json
 and add your hostname and token for wikijs
 
-To run unittests from the tests directory you can either install the package, install it in a venv, or to run them as modules without installing:
+To run scripts from the examples directory you can either install the package, install it in a venv, or to run them as modules without installing:
 
 ```
-$ python -m tests.pages_list
+$ python -m examples.pages_list
 ```
