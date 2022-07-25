@@ -1,6 +1,7 @@
 from typing import Dict, List, Tuple
 from wikijspy.api_client import ApiClient
 from wikijspy.types.page_types import PageOrderBy, PageOrderByDirection, PageListItemOutput, PageOutput, PageResponseOutput
+from wikijspy.types.general import ResponseStatusOutput
 import re
 import json
 
@@ -228,5 +229,22 @@ class PagesApi:
                 
         return self.api_client.send_request(query, json.dumps(query_variables))
     
+    def delete(self,
+        output: ResponseStatusOutput,
+        id: int
+    ):
+        query = """
+        mutation($id: Int!){
+            pages{
+                delete(
+                    id: $id
+                ){
+                    OUTPUT
+                }
+            }
+        }
+        """.replace('OUTPUT', _generate_output_str(output))
 
-
+        return self.api_client.send_request(query, json.dumps({
+            "id": id
+        }))
