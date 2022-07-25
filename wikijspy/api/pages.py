@@ -191,6 +191,9 @@ class PagesApi:
         }
         """.replace('OUTPUT', _generate_output_str(output))
         
+        if content is None:
+            content = self.single(PageOutput(["content"]), id)["pages"]["single"]["content"]
+        
         split_query = query.split("\n")
         
         for key,val in locals().items():
