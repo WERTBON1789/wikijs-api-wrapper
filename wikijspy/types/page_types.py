@@ -48,6 +48,9 @@ class PageListItemOutput:
             return self.output[result]
         else:
             raise StopIteration
+    
+    def __getitem__(self, item: int):
+        return self.output[item]
 
 class PageOutput:
     _validation_list = [
@@ -121,17 +124,16 @@ class PageResponseOutput:
                     raise InvalidOutputError(val, self.__class__.__name__)
         
         self.output = output
-    
-    def __iter__(self):
+        
         self.iter_dict = []
         
         for element in self.output:
             for item in self.output[element]:
                 self.iter_dict.append((element, item))
-        
+    
+    def __iter__(self):
         self.i = 0
         self.max = len(self.iter_dict)-1
-        
         return self
     
     def __next__(self) -> Tuple[str, str]:
@@ -141,3 +143,6 @@ class PageResponseOutput:
             return result
         else:
             raise StopIteration
+    
+    def __getitem__(self, item: int):
+        return self.iter_dict[item]

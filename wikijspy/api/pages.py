@@ -1,7 +1,34 @@
-from typing import List
+from typing import Dict, List, Tuple
 from wikijspy.api_client import ApiClient
 from wikijspy.types.page_types import PageOrderBy, PageOrderByDirection, PageListItemOutput, PageResponseOutput
 import json
+
+def _generate_output_str(output) -> str:
+    if type(output[0]) is str:
+        output_str: str = ""
+        for item in output:
+            output_str += item+","
+        return output_str
+    if isinstance(output[0], Tuple):
+        output_str: str = ""
+        output_dict: Tuple[str, str] = {}
+        
+        for item in output:
+            if output_dict.get(item[0]) is None:
+                output_dict[item[0]] = []
+            output_dict[item[0]].append(item[1])
+        
+        for key,val in output_dict.items():
+            if not val:
+                continue
+            
+            output_str += key+'{'
+            
+            for item in val:
+                output_str += item+','
+            output_str += '}'
+        return output_str
+
 
 class PagesApi:
     def __init__(self, api_client: ApiClient) -> None:
@@ -17,12 +44,6 @@ class PagesApi:
              orderByDirection: PageOrderByDirection = None,
              tags: List[str] = None
              ):
-        
-        output_str: str = ""
-        
-        for item in output:
-            output_str += item+","
-        
         query = """
         query($authorId: Int, $creatorId: Int, $limit: Int, $locale: String, $orderBy: PageOrderBy, $orderByDirection: PageOrderByDirection, $tags: [String!]){
             pages {
@@ -39,7 +60,7 @@ class PagesApi:
                 }
             }
         }
-        """.replace('OUTPUT', output_str)
+        """.replace('OUTPUT', _generate_output_str(output))
         
         return self.api_client.send_request(query, json.dumps({
                 "authorId": authorId,
@@ -67,30 +88,6 @@ class PagesApi:
         scriptCss: str = None,
         scriptJs: str = None,
     ):
-        
-        output_str = ""
-        
-        output_dict = {
-            "responseResult": [],
-            "page": []
-        }
-        
-        for i in output:
-            output_dict[i[0]].append(i[1])
-        
-        for key,val in output_dict.items():
-            if not val:
-                continue
-            
-            output_str += key+'{'
-            
-            for i in val:
-                output_str += i+','
-            output_str += '}'
-        
-        
-        print(output_str)
-        
         query = """
         mutation($content: String!, $description: String!, $editor: String!, $isPublished: Boolean!, $isPrivate: Boolean!, $locale: String!, $path: String!, $publishEndDate: Date, $publishStartDate: Date, $scriptCss: String, $scriptJs: String, $tags: [String]!, $title: String!){
             pages{
@@ -113,7 +110,8 @@ class PagesApi:
                 }
             }
         }
-        """.replace('OUTPUT', output_str)
+        """.replace('OUTPUT', _generate_output_str(output))
+        
         return self.api_client.send_request(query, json.dumps({
             "content": content,
             "description": description,
@@ -130,5 +128,64 @@ class PagesApi:
             "scriptJs": scriptJs
         }))
         
+    def update(self,
+        output: PageResponseOutput,
+        id: int,
+        content: str = None,
+        description: str = None,
+        editor: str = None,
+        isPrivate: bool = None,
+        isPublished: bool = None,
+        locale: str = None,
+        path: str = None,
+        publishEndDate: str = None,
+        publishStartDate: str = None,
+        scriptCss: str = None,
+        scriptJs: str = None,
+        tags: List[str] = None,
+        title: str = None
+    ):
+        query = """
+        mutation($id: Int!, $content: String, $description: String, $editor: String, $isPrivate: Boolean, $isPublished: Boolean, $locale: String, $path: String, $publishEndDate: Date, $publishStartDate: Date, $scriptCss: String, $scriptJs: String, $tags: [String], $title: String) {
+            pages {
+                update(
+                    id: $id
+                    content: $content
+                    description: $description
+                    editor: $editor
+                    isPrivate: $isPrivate
+                    isPublished: $isPublished
+                    locale: $locale
+                    path: $path
+                    publishEndDate: $publishEndDate
+                    publishStartDate: $publishStartDate
+                    scriptCss: $scriptCss
+                    scriptJs: $scriptJs
+                    tags: $tags
+                    title: $title
+                ){
+                    OUTPUT
+                }
+            }
+        }
+        """.replace('OUTPUT', _generate_output_str(output))
         
+        return self.api_client.send_request(query, json.dumps({
+            "id": id,
+            "content": content,
+            "description": description,
+            "editor": editor,
+            "isPrivate": isPrivate,
+            "isPublished": isPublished,
+            "locale": locale,
+            "path": path,
+            "publishEndDate": publishEndDate,
+            "publishStartDate": publishStartDate,
+            "scriptCss": scriptCss,
+            "scriptJs": scriptJs,
+            "tags": tags,
+            "title": title
+        }))
     
+
+
