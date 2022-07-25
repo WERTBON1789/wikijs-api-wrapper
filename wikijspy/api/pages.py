@@ -1,6 +1,7 @@
 from typing import Dict, List, Tuple
 from wikijspy.api_client import ApiClient
 from wikijspy.types.page_types import PageOrderBy, PageOrderByDirection, PageListItemOutput, PageResponseOutput
+import re
 import json
 
 def _generate_output_str(output) -> str:
@@ -142,7 +143,7 @@ class PagesApi:
         publishStartDate: str = None,
         scriptCss: str = None,
         scriptJs: str = None,
-        tags: List[str] = None,
+        tags: List[str] = [],
         title: str = None
     ):
         query = """
@@ -170,7 +171,16 @@ class PagesApi:
         }
         """.replace('OUTPUT', _generate_output_str(output))
         
-        return self.api_client.send_request(query, json.dumps({
+        split_query = query.split("\n")
+        
+        for key,val in locals().items():
+            if val is None:
+                split_query[0] = re.sub(r"\$.+, ", "", split_query[0])
+                for index,line in enumerate(split_query):
+                    if not re.search(f" +{key}: \$\w+", line) is None:
+                        split_query[index] = ""
+        
+        all_vars = {
             "id": id,
             "content": content,
             "description": description,
@@ -185,7 +195,15 @@ class PagesApi:
             "scriptJs": scriptJs,
             "tags": tags,
             "title": title
-        }))
+        }
+        
+        query_variables = {}
+        
+        for key,val in all_vars.items():
+            if not val is None:
+                query_variables[key] = val
+                
+        return self.api_client.send_request(query, json.dumps(query_variables))
     
 
 

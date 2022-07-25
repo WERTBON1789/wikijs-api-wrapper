@@ -25,6 +25,8 @@ print(pages_api.update(PageResponseOutput({
     ]
 }),
     id=10637,
-    content="Hallo"
+    content="Hello",
+    title="Test",
+    description="Desc"
 ))
 
