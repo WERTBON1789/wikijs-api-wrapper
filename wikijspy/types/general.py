@@ -25,6 +25,34 @@ class Output:
         return self.output[item]
     
 class DictOutput:
+    def __init__(self, output: Dict[str, List[str]]):
+        if not isinstance(output, dict):
+            raise Exception(f"{self.__class__.__name__} needs an dictionary as parameter!")
+        for key in output.keys():
+            if not key in list(self._validation_list.keys()):
+                raise InvalidOutputError(','.join(list(output.keys())), self.__class__.__name__)
+        for v_key in self._validation_list.keys():
+            for output_key in output.keys():
+                for i in (output[output_key]):
+                    if not i in self._validation_list[v_key]:
+                        raise InvalidOutputError(i, self.__class__.__name__)
+        
+        for key,val in output.items():
+            if not isinstance(val, list):
+                raise Exception(f"{self.__class__.__name__} values behind the dict keys must be of type list!")
+
+            for item in val:
+                if not item in self._validation_list[key]:
+                    raise InvalidOutputError(item, self.__class__.__name__)
+        
+        self.output = output
+        
+        self.iter_dict = []
+        
+        for element in self.output:
+            for item in self.output[element]:
+                self.iter_dict.append((element, item))
+    
     def __iter__(self):
         self.i = 0
         self.max = len(self.iter_dict)-1
