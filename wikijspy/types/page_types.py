@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Any, Dict, List, Tuple
 from wikijspy.types.error import InvalidOutputError
-from wikijspy.types.general import ResponseStatusOutput
+from wikijspy.types.general import ResponseStatusOutput, Output, DictOutput
 
 class PageOrderBy(Enum):
     CREATED = 0
@@ -14,7 +14,7 @@ class PageOrderByDirection(Enum):
     ASC = 0
     DESC = 1
 
-class PageListItemOutput:
+class PageListItemOutput(Output):
     _validation_list = [
         "id",
         "path",
@@ -35,24 +35,8 @@ class PageListItemOutput:
             if not item in self._validation_list:
                 raise InvalidOutputError(item, self.__class__.__name__)
         self.output = output
-    
-    def __iter__(self):
-        self.i = 0
-        self.max = len(self.output)-1
-        return self
-    
-    def __next__(self):
-        if self.i <= self.max:
-            result = self.i
-            self.i += 1
-            return self.output[result]
-        else:
-            raise StopIteration
-    
-    def __getitem__(self, item: int):
-        return self.output[item]
 
-class PageOutput:
+class PageOutput(Output):
     _validation_list = [
         "id",
         "path",
@@ -88,24 +72,8 @@ class PageOutput:
             if not item in self._validation_list:
                 raise InvalidOutputError(item, self.__class__.__name__)
         self.output = output
-    
-    def __iter__(self):
-        self.i = 0
-        self.max = len(self.output)-1
-        return self
-    
-    def __next__(self):
-        if self.i <= self.max:
-            result = self.i
-            self.i += 1
-            return self.output[result]
-        else:
-            raise StopIteration
-    
-    def __getitem__(self, item: int):
-        return self.output[item]
 
-class PageResponseOutput:
+class PageResponseOutput(DictOutput):
     _validation_list = {
         "responseResult": ResponseStatusOutput._validation_list,
         "page": PageOutput._validation_list
@@ -133,19 +101,3 @@ class PageResponseOutput:
         for element in self.output:
             for item in self.output[element]:
                 self.iter_dict.append((element, item))
-    
-    def __iter__(self):
-        self.i = 0
-        self.max = len(self.iter_dict)-1
-        return self
-    
-    def __next__(self) -> Tuple[str, str]:
-        if self.i <= self.max:
-            result = self.iter_dict[self.i]
-            self.i += 1
-            return result
-        else:
-            raise StopIteration
-    
-    def __getitem__(self, item: int):
-        return self.iter_dict[item]

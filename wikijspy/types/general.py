@@ -1,20 +1,7 @@
 from typing import Dict, List, Tuple
 from wikijspy.types.error import InvalidOutputError
 
-class ResponseStatusOutput:
-    _validation_list = [
-        "succeeded",
-        "errorCode",
-        "slug",
-        "message"
-    ]
-
-    def __init__(self, output: List[str]) -> None:
-        for item in output:
-            if not item in self._validation_list:
-                raise InvalidOutputError(item, self.__class__.__name__)
-        self.output = output
-    
+class Output:
     def __iter__(self):
         self.i = 0
         self.max = len(self.output)-1
@@ -30,8 +17,39 @@ class ResponseStatusOutput:
 
     def __getitem__(self, item: int):
         return self.output[item]
+    
+class DictOutput:
+    def __iter__(self):
+        self.i = 0
+        self.max = len(self.iter_dict)-1
+        return self
+    
+    def __next__(self) -> Tuple[str, str]:
+        if self.i <= self.max:
+            result = self.iter_dict[self.i]
+            self.i += 1
+            return result
+        else:
+            raise StopIteration
+    
+    def __getitem__(self, item: int):
+        return self.iter_dict[item]
 
-class DefaultResponseOutput:
+class ResponseStatusOutput(Output):
+    _validation_list = [
+        "succeeded",
+        "errorCode",
+        "slug",
+        "message"
+    ]
+
+    def __init__(self, output: List[str]) -> None:
+        for item in output:
+            if not item in self._validation_list:
+                raise InvalidOutputError(item, self.__class__.__name__)
+        self.output = output
+
+class DefaultResponseOutput(DictOutput):
     _validation_list = {
         "responseResult": ResponseStatusOutput._validation_list
     }
@@ -58,19 +76,3 @@ class DefaultResponseOutput:
         for element in self.output:
             for item in self.output[element]:
                 self.iter_dict.append((element, item))
-    
-    def __iter__(self):
-        self.i = 0
-        self.max = len(self.iter_dict)-1
-        return self
-    
-    def __next__(self) -> Tuple[str, str]:
-        if self.i <= self.max:
-            result = self.iter_dict[self.i]
-            self.i += 1
-            return result
-        else:
-            raise StopIteration
-    
-    def __getitem__(self, item: int):
-        return self.iter_dict[item]
