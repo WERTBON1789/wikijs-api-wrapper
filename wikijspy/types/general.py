@@ -33,7 +33,9 @@ class DictOutput:
                 raise InvalidOutputError(','.join(list(output.keys())), self.__class__.__name__)
         for v_key in self._validation_list.keys():
             for output_key in output.keys():
-                for i in (output[output_key]):
+                if output_key != v_key:
+                    continue
+                for i in output[output_key]:
                     if not i in self._validation_list[v_key]:
                         raise InvalidOutputError(i, self.__class__.__name__)
         
