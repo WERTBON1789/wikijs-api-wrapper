@@ -13,12 +13,6 @@ class UserMinimalOutput(Output):
         "createdAt",
         "lastLoginAt"
     ]
-    
-    def __init__(self, output: List[str]) -> None:
-        for item in output:
-            if not item in self._validation_list:
-                raise InvalidOutputError(item, self.__class__.__name__)
-        self.output = output
 
 class UserOutput(Output):
     _validation_list = [
@@ -43,9 +37,3 @@ class UserOutput(Output):
         "tfaIsActive",
         "groups"
     ]
-    
-    def __init__(self, output: List[str]) -> None:
-        for item in output:
-            if not item in self._validation_list:
-                raise InvalidOutputError(item, self.__class__.__name__)
-        self.output = output

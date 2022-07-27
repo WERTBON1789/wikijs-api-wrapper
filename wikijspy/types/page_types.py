@@ -29,12 +29,7 @@ class PageListItemOutput(Output):
         "updatedAt",
         "tags"
     ]
-    
-    def __init__(self, output: List[str]):
-        for item in output:
-            if not item in self._validation_list:
-                raise InvalidOutputError(item, self.__class__.__name__)
-        self.output = output
+
 
 class PageOutput(Output):
     _validation_list = [
@@ -66,12 +61,7 @@ class PageOutput(Output):
         "creatorName",
         "creatorEmail"
     ]
-    
-    def __init__(self, output: List[str]):
-        for item in output:
-            if not item in self._validation_list:
-                raise InvalidOutputError(item, self.__class__.__name__)
-        self.output = output
+
 
 class PageResponseOutput(DictOutput):
     _validation_list = {

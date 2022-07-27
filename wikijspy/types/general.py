@@ -2,6 +2,12 @@ from typing import Dict, List, Tuple
 from wikijspy.types.error import InvalidOutputError
 
 class Output:
+    def __init__(self, output: List[str]) -> None:
+        for item in output:
+            if not item in self._validation_list:
+                raise InvalidOutputError(item, self.__class__.__name__)
+        self.output = output
+    
     def __iter__(self):
         self.i = 0
         self.max = len(self.output)-1
