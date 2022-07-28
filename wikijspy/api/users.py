@@ -9,7 +9,7 @@ class UsersApi:
     def __init__(self, api_client: ApiClient) -> None:
         self.api_client = api_client
     
-    def list(self, output: UserMinimalOutput, filter: str, orderBy: str):
+    def list(self, output: UserMinimalOutput, filter: str = None, orderBy: str = None):
         query = """
         query($filter: String, $orderBy: String){
             users{
