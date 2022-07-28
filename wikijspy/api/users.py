@@ -104,7 +104,6 @@ class UsersApi:
         """.replace('OUTPUT', _generate_output_str(output))
 
         return self.api_client.send_request(query, json.dumps({
-            "output": output,
             "email": email,
             "name": name,
             "providerKey": providerKey,
@@ -136,7 +135,6 @@ class UsersApi:
         """.replace('OUTPUT', _generate_output_str(output))
 
         return self.api_client.send_request(query, json.dumps({
-            "output": output,
             "id": id,
             "email": email,
             "name": name,
