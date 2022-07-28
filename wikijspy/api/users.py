@@ -7,7 +7,7 @@ from wikijspy.api.shared import _generate_output_str
 
 class UsersApi:
     def __init__(self, api_client: ApiClient) -> None:
-        self.api_client = ApiClient
+        self.api_client = api_client
     
     def list(self, output: UserMinimalOutput, filter: str, orderBy: str):
         query = """
