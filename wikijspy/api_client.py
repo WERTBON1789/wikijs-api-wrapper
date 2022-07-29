@@ -8,6 +8,8 @@ from gql import gql
 class ApiClient:
     def __init__(self, configuration: Configuration) -> None:
         self.client = configuration
+        self.hostname = configuration.hostname
+        self.token = configuration.token
     
     @property
     def client(self):
