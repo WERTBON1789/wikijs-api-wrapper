@@ -3,7 +3,9 @@ from wikijspy.configuration import Configuration
 from wikijspy.api.pages import PagesApi
 from wikijspy.api.users import UsersApi
 from wikijspy.api.authentication import AuthenticationApi
+from wikijspy.api.assets import AssetsApi
 from wikijspy.types.page_types import *
 from wikijspy.types.users_types import *
 from wikijspy.types.authentication_types import *
+from wikijspy.types.assets_types import *
 from wikijspy.types.general import *
