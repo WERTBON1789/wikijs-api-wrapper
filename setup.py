@@ -7,7 +7,7 @@ with open(f"{dirname(__file__)}/requirements.txt", "r") as f:
 
 setup(
     name='wikijspy',
-    version='0.1.4',
+    version='0.1.5',
     author='WERTBON1789',
     author_email='jan210404@gmx.de',
     packages=find_packages(),
